@@ -19,6 +19,11 @@ public class FilePreviewFactory {
         this.context = context;
     }
 
+    /**
+     * 根据 fileAttribute 获取对应文件转换的FilePreviewImpl
+     * @param fileAttribute
+     * @return
+     */
     public FilePreview get(FileAttribute fileAttribute) {
         Map<String, FilePreview> filePreviewMap = context.getBeansOfType(FilePreview.class);
         return filePreviewMap.get(fileAttribute.getType().getInstanceName());

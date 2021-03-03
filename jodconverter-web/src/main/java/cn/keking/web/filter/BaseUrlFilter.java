@@ -32,11 +32,18 @@ public class BaseUrlFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain filterChain) throws IOException, ServletException {
         String baseUrl;
         StringBuilder pathBuilder = new StringBuilder();
-        pathBuilder.append(request.getScheme()).append("://").append(request.getServerName()).append(":")
-                .append(request.getServerPort()).append(((HttpServletRequest) request).getContextPath()).append("/");
+        pathBuilder.append(request.getScheme())
+                .append("://")
+                .append(request.getServerName())
+                .append(":")
+                .append(request.getServerPort())
+                .append(((HttpServletRequest) request).getContextPath())
+                .append("/");
         String baseUrlTmp = ConfigConstants.getBaseUrl();
         if (baseUrlTmp != null && !ConfigConstants.DEFAULT_BASE_URL.equals(baseUrlTmp.toLowerCase())) {
             if (!baseUrlTmp.endsWith("/")) {

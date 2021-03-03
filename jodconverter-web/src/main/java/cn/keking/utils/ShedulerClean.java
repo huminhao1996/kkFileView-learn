@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
+ * 清理缓存计划
  * @auther: chenjh
  * @since: 2019/6/11 7:45
  */

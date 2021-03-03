@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 信任站点 Filter
  * @author chenjh
  * @since 2020/2/18 19:13
  */
@@ -35,8 +36,11 @@ public class TrustHostFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String url = getSourceUrl(request);
         String host = getHost(url);
-        if (host != null &&!ConfigConstants.getTrustHostSet().isEmpty() && !ConfigConstants.getTrustHostSet().contains(host)) {
+        if (host != null &&
+                !ConfigConstants.getTrustHostSet().isEmpty() &&
+                !ConfigConstants.getTrustHostSet().contains(host)) {
             String html = this.notTrustHost.replace("${current_host}", host);
+            // 非信任站点 直接返回
             response.getWriter().write(html);
             response.getWriter().close();
         }

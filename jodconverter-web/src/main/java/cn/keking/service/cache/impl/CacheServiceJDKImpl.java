@@ -12,6 +12,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 /**
+ * 基于JDK的缓存 服务
  * @auther: chenjh
  * @time: 2019/4/2 17:21
  * @description

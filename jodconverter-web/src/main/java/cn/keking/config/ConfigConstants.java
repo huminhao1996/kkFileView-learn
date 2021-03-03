@@ -10,23 +10,24 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.Set;
 
 /**
+ * 配置文件参数
  * @author: chenjh
  * @since: 2019/4/10 17:22
  */
 @Component
 public class ConfigConstants {
 
-    private static Boolean CACHE_ENABLED;
-    private static String[] SIM_TEXT = {};
-    private static String[] MEDIA = {};
-    private static String OFFICE_PREVIEW_TYPE;
+    private static Boolean CACHE_ENABLED;   // 是否开启缓存
+    private static String[] SIM_TEXT = {};  // 文本类型
+    private static String[] MEDIA = {};     // 媒体类型
+    private static String OFFICE_PREVIEW_TYPE; // 页面预览类型 默认为图片(image)，可配置为pdf
     private static String FTP_USERNAME;
     private static String FTP_PASSWORD;
     private static String FTP_CONTROL_ENCODING;
-    private static String BASE_URL;
-    private static String FILE_DIR = OfficeUtils.getHomePath() + File.separator + "file" + File.separator;
-    private static CopyOnWriteArraySet<String> TRUST_HOST_SET;
-    private static String PDF_DOWNLOAD_DISABLE;
+    private static String BASE_URL; // kkfileview服务器地址
+    private static String FILE_DIR = OfficeUtils.getHomePath() + File.separator + "file" + File.separator;   // 文件上传目录 默认为: 当前项目绝对路径\jodconverter-web\src\main\ 例: D:\ideaProject\文件在线预览\kk_file_preview\jodconverter-web\src\main\
+    private static CopyOnWriteArraySet<String> TRUST_HOST_SET;  //信任站点
+    private static String PDF_DOWNLOAD_DISABLE; // 文件预览的pdf是否允许下载
 
     public static final String DEFAULT_CACHE_ENABLED = "true";
     public static final String DEFAULT_TXT_TYPE = "txt,html,htm,asp,jsp,xml,json,properties,md,gitignore,log,java,py,c,cpp,sql,sh,bat,m,bas,prg,cmd";

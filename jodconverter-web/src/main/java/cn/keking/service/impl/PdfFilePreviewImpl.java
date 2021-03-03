@@ -37,28 +37,40 @@ public class PdfFilePreviewImpl implements FilePreview {
     }
 
     @Override
-    public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute) {
-        String suffix=fileAttribute.getSuffix();
-        String fileName=fileAttribute.getName();
-        String officePreviewType = model.asMap().get("officePreviewType") == null ? ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
-        String baseUrl = BaseUrlFilter.getBaseUrl();
-        String pdfName = fileName.substring(0, fileName.lastIndexOf(".") + 1) + "pdf";
-        String outFilePath = FILE_DIR + pdfName;
-        if (OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_IMAGE.equals(officePreviewType) || OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_ALL_IMAGES.equals(officePreviewType)) {
-            //当文件不存在时，就去下载
+    public String filePreviewHandle(String url,
+                                    Model model,
+                                    FileAttribute fileAttribute) {
+        String suffix=fileAttribute.getSuffix(); // 文件后缀
+        String fileName=fileAttribute.getName(); // 文件名称
+        String officePreviewType = model.asMap().get("officePreviewType") == null ?
+                ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
+        String baseUrl = BaseUrlFilter.getBaseUrl(); // 提供预览服务的地址
+        String pdfName = fileName.substring(0, fileName.lastIndexOf(".") + 1) + "pdf"; //转换后的文件名称
+        String outFilePath = FILE_DIR + pdfName; // 文件转换后的输出路径 例: D:\kkFileview\test.xlsx
+
+        // 当展示类型为 image或allImages 时,进行文件下载,类型转换
+        if (OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_IMAGE.equals(officePreviewType) ||
+                OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_ALL_IMAGES.equals(officePreviewType)) {
+
+            // 1.当缓存中的文件不存在 或者 禁用缓存时，就去下载文件
             if (!fileUtils.listConvertedFiles().containsKey(pdfName) || !ConfigConstants.isCacheEnabled()) {
+                // 下载远程端文件
                 ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, fileName);
                 if (0 != response.getCode()) {
                     model.addAttribute("fileType", suffix);
                     model.addAttribute("msg", response.getMsg());
                     return "fileNotSupported";
                 }
+
+                // 远程端文件下载到kkfile服务器后的地址
                 outFilePath = response.getContent();
                 if (ConfigConstants.isCacheEnabled()) {
                     // 加入缓存
                     fileUtils.addConvertedFile(pdfName, fileUtils.getRelativePath(outFilePath));
                 }
             }
+
+            // 2. 文件类型转换
             List<String> imageUrls = pdfUtils.pdf2jpg(outFilePath, pdfName, baseUrl);
             if (imageUrls == null || imageUrls.size() < 1) {
                 model.addAttribute("msg", "pdf转图片异常，请联系管理员");
@@ -67,6 +79,8 @@ public class PdfFilePreviewImpl implements FilePreview {
             }
             model.addAttribute("imgurls", imageUrls);
             model.addAttribute("currentUrl", imageUrls.get(0));
+
+            // 对应页面跳转
             if (OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_IMAGE.equals(officePreviewType)) {
                 return "officePicture";
             } else {

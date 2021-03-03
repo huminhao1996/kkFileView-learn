@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- *
+ * kkfile 自带的文件上传
  * @author yudian-it
  * @date 2017/12/1
  */
@@ -31,12 +31,19 @@ public class FileController {
 
     private final Logger logger = LoggerFactory.getLogger(FileController.class);
 
+    // 文件上传目录 默认为: 当前项目绝对路径\jodconverter-web\src\main 例: D:\ideaProject\文件在线预览\kk_file_preview\jodconverter-web\src\main
     private final String fileDir = ConfigConstants.getFileDir();
 
     private final String demoDir = "demo";
 
     private final String demoPath = demoDir + File.separator;
 
+    /**
+     * 文件上传
+     * @param file
+     * @return
+     * @throws JsonProcessingException
+     */
     @RequestMapping(value = "fileUpload", method = RequestMethod.POST)
     public String fileUpload(@RequestParam("file") MultipartFile file) throws JsonProcessingException {
         // 获取文件名
@@ -55,6 +62,8 @@ public class FileController {
         if (existsFile(fileName)) {
             return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(1, "存在同名文件，请先删除原有文件再次上传", null));
         }
+        // 文件上传路径 默认为: 当前项目绝对路径\jodconverter-web\src\main\demo\
+        // 例: D:\ideaProject\文件在线预览\kk_file_preview\jodconverter-web\src\main\demo\
         File outFile = new File(fileDir + demoPath);
         if (!outFile.exists()) {
             outFile.mkdirs();
@@ -69,6 +78,12 @@ public class FileController {
         }
     }
 
+    /**
+     * 文件删除
+     * @param fileName
+     * @return
+     * @throws JsonProcessingException
+     */
     @RequestMapping(value = "deleteFile", method = RequestMethod.GET)
     public String deleteFile(String fileName) throws JsonProcessingException {
         if (fileName.contains("/")) {
@@ -82,6 +97,11 @@ public class FileController {
         return new ObjectMapper().writeValueAsString(new ReturnResponse<String>(0, "SUCCESS", null));
     }
 
+    /**
+     * 文件列表
+     * @return
+     * @throws JsonProcessingException
+     */
     @RequestMapping(value = "listFiles", method = RequestMethod.GET)
     public String getFiles() throws JsonProcessingException {
         List<Map<String, String>> list = Lists.newArrayList();

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * 创建文件转换器
+ * 文件类型转换 工具类
  *
  * @author yudian-it
  * @date 2017/11/13
@@ -33,28 +33,37 @@ public class ConverterUtils {
 
     private final Logger logger = LoggerFactory.getLogger(ConverterUtils.class);
 
+    // office任务管理器
     private OfficeManager officeManager;
 
+    /**
+     * spring容器启动后初始化office组件
+     */
     @PostConstruct
     public void initOfficeManager() {
         File officeHome;
+        // 获取文字处理软件OpenOffice或LiberOffice的路径
+        // 一定要先安装环境,并且在application.properties将软件路径配置正确,否则就会报下面"找不到office组件"错误
         officeHome = OfficeUtils.getDefaultOfficeHome();
         if (officeHome == null) {
             throw new RuntimeException("找不到office组件，请确认'office.home'配置是否有误");
         }
+        // 先结束office进程
         boolean killOffice = killProcess();
         if (killOffice) {
             logger.warn("检测到有正在运行的office进程，已自动结束该进程");
         }
         try {
+            // office管理器配置
             DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
             configuration.setOfficeHome(officeHome);
             configuration.setPortNumber(8100);
             // 设置任务执行超时为5分钟
             configuration.setTaskExecutionTimeout(1000 * 60 * 5L);
             // 设置任务队列超时为24小时
-            //configuration.setTaskQueueTimeout(1000 * 60 * 60 * 24L);
+            configuration.setTaskQueueTimeout(1000 * 60 * 60 * 24L);
             officeManager = configuration.buildOfficeManager();
+            // 启动office管理器
             officeManager.start();
         } catch (Exception e) {
             logger.error("启动office组件失败，请检查office组件是否可用");
@@ -62,6 +71,10 @@ public class ConverterUtils {
         }
     }
 
+    /**
+     * 获取 office 类型转换器
+     * @return
+     */
     public OfficeDocumentConverter getDocumentConverter() {
         OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager, new ControlDocumentFormatRegistry());
         converter.setDefaultLoadProperties(getLoadProperties());
@@ -77,10 +90,15 @@ public class ConverterUtils {
         return loadProperties;
     }
 
+    /**
+     * 杀死进程
+     * @return
+     */
     private boolean killProcess() {
         boolean flag = false;
         Properties props = System.getProperties();
         try {
+            // windows系统
             if (props.getProperty("os.name").toLowerCase().contains("windows")) {
                 Process p = Runtime.getRuntime().exec("cmd /c tasklist ");
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -115,6 +133,9 @@ public class ConverterUtils {
         return flag;
     }
 
+    /**
+     * spring容器关闭时,将软件也关闭
+     */
     @PreDestroy
     public void destroyOfficeManager(){
         if (null != officeManager && officeManager.isRunning()) {

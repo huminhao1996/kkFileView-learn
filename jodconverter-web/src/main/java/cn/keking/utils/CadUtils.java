@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 /**
+ * cad -> pdf
  * @author chenjhc
  * @since 2019/11/21 14:34
  */
@@ -22,6 +23,12 @@ public class CadUtils {
 
     private final Logger logger = LoggerFactory.getLogger(CadUtils.class);
 
+    /**
+     * cad -> pdf
+     * @param inputFilePath
+     * @param outputFilePath
+     * @return
+     */
     public boolean cadToPdf(String inputFilePath, String outputFilePath)  {
         com.aspose.cad.Image cadImage = com.aspose.cad.Image.load(inputFilePath);
         CadRasterizationOptions cadRasterizationOptions = new CadRasterizationOptions();

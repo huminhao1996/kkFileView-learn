@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 基于redis的缓存服务
  * @auther: chenjh
  * @time: 2019/4/2 18:02
  * @description
