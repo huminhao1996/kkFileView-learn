@@ -29,8 +29,16 @@ public class PictureFilePreviewImpl implements FilePreview {
         this.downloadUtils = downloadUtils;
     }
 
+    /**
+     * 图片直接下载,前端浏览器可直接访问
+     * @param url
+     * @param model
+     * @param fileAttribute
+     * @return
+     */
     @Override
     public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute) {
+        // fileKey 是干嘛的?
         String fileKey = (String) RequestContextHolder.currentRequestAttributes().getAttribute("fileKey",0);
         List<String> imgUrls = Lists.newArrayList(url);
         try {
@@ -39,6 +47,7 @@ public class PictureFilePreviewImpl implements FilePreview {
         } catch (Exception e){
             imgUrls = Lists.newArrayList(url);
         }
+
         // 不是http开头，浏览器不能直接访问，需下载到本地
         if (url != null && !url.toLowerCase().startsWith("http")) {
             ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, null);

@@ -16,8 +16,8 @@ public enum FileType {
 
     private final String instanceName;
 
-    FileType(String instanceName){
-        this.instanceName=instanceName;
+    FileType(String instanceName) {
+        this.instanceName = instanceName;
     }
 
     public String getInstanceName() {

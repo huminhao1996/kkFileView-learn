@@ -68,6 +68,24 @@ public class FileUtils {
         return typeFromFileName(fileName);
     }
 
+    /**
+     * 从url中剥离出文件名
+     * @param url
+     *      格式如：http://keking.ufile.ucloud.com.cn/20171113164107_月度绩效表模板(新).xls?UCloudPublicKey=ucloudtangshd@weifenf.com14355492830001993909323&Expires=&Signature=I D1NOFtAJSPT16E6imv6JWuq0k=
+     * @return 文件名
+     */
+    public String getFileNameFromURL(String url) {
+        // 因为url的参数中可能会存在/的情况，所以直接url.lastIndexOf("/")会有问题
+        // 所以先从？处将url截断，然后运用url.lastIndexOf("/")获取文件名
+        String noQueryUrl = url.substring(0, url.contains("?") ? url.indexOf("?"): url.length());
+        return noQueryUrl.substring(noQueryUrl.lastIndexOf("/") + 1);
+    }
+
+    /**
+     * 根据文件名得到对应的 文件类型
+     * @param fileName
+     * @return 文件类型
+     */
     private FileType typeFromFileName(String fileName) {
         String[] simText = ConfigConstants.getSimText();
         String[] media = ConfigConstants.getMedia();
@@ -94,18 +112,6 @@ public class FileUtils {
             return FileType.cad;
         }
         return FileType.other;
-    }
-    /**
-     * 从url中剥离出文件名
-     * @param url
-     *      格式如：http://keking.ufile.ucloud.com.cn/20171113164107_月度绩效表模板(新).xls?UCloudPublicKey=ucloudtangshd@weifenf.com14355492830001993909323&Expires=&Signature=I D1NOFtAJSPT16E6imv6JWuq0k=
-     * @return 文件名
-     */
-    public String getFileNameFromURL(String url) {
-        // 因为url的参数中可能会存在/的情况，所以直接url.lastIndexOf("/")会有问题
-        // 所以先从？处将url截断，然后运用url.lastIndexOf("/")获取文件名
-        String noQueryUrl = url.substring(0, url.contains("?") ? url.indexOf("?"): url.length());
-        return noQueryUrl.substring(noQueryUrl.lastIndexOf("/") + 1);
     }
 
     /**
@@ -262,15 +268,23 @@ public class FileUtils {
         return suffixFromFileName(fileName);
     }
 
+    /**
+     * 文件后缀
+     * @param fileName
+     * @return
+     */
     private String suffixFromFileName(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     /**
      * 获取url中的参数
+     * 很多系统内不是直接暴露文件下载地址,而是请求通过id、code等参数到通过统一的接口，
+     * 后端通过id或code等参数定位文件，再通过OutputStream输出下载，此时下载url是不带文件后缀名的，
+     * 预览时需要拿到文件名，传一个参数fullfilename=xxx.xxx来指定文件名
      * @param url url
      * @param name 参数名
-     * @return 参数值
+     * @return 文件名 例如:test.txt
      */
     public String getUrlParameterReg(String url, String name) {
         Map<String, String> mapRequest = new HashMap<>();
@@ -322,15 +336,16 @@ public class FileUtils {
         String fileName;
         FileType type;
         String suffix;
+        // 解析url,根据url中的"fullfilename"这个参数作为原文件名
         String fullFileName = getUrlParameterReg(url, "fullfilename");
         if (!StringUtils.isEmpty(fullFileName)) {
             fileName = fullFileName;
-            type = typeFromFileName(fileName);
-            suffix = suffixFromFileName(fileName);
+            type = typeFromFileName(fileName);  // 根据文件名得到对应的文件类型,与后续调用不同的PreviewImpl有关
+            suffix = suffixFromFileName(fileName); // 获取文件后缀
         } else {
-            fileName = getFileNameFromURL(url);
-            type = typeFromUrl(url);
-            suffix = suffixFromUrl(url);
+            fileName = getFileNameFromURL(url); // 从url中剥离出文件名
+            type = typeFromUrl(url); // 文件类型
+            suffix = suffixFromUrl(url); // 获取文件后缀
         }
         return new FileAttribute(type,suffix,fileName,url);
     }

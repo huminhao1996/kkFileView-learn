@@ -35,6 +35,9 @@ public class FileConvertQueueTask {
         this.fileUtils=fileUtils;
     }
 
+    /**
+     * spring容器启动后 开始从消费队列中获取文件并转换
+     */
     @PostConstruct
     public void startTask(){
         ExecutorService executorService = Executors.newFixedThreadPool(3);
@@ -42,6 +45,9 @@ public class FileConvertQueueTask {
         logger.info("队列处理文件转换任务启动完成 ");
     }
 
+    /**
+     * 转换任务
+     */
     static class ConvertTask implements Runnable {
 
         private final Logger logger = LoggerFactory.getLogger(ConvertTask.class);
@@ -65,8 +71,10 @@ public class FileConvertQueueTask {
             while (true) {
                 String url = null;
                 try {
+                    // 从缓存中获取 待转换队列
                     url = cacheService.takeQueueTask();
                     if(url != null){
+                        // 文件类型转换,实现逻辑和文件预览大部分一致
                         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
                         FileType fileType = fileAttribute.getType();
                         logger.info("正在处理预览转换任务，url：{}，预览类型：{}", url, fileType);

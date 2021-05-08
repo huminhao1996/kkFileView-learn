@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 文件转换,文件预览
  * @author yudian-it
  */
 @Controller
@@ -49,18 +50,34 @@ public class OnlinePreviewController {
         this.downloadUtils = downloadUtils;
     }
 
-
+    /**
+     * 文件预览
+     * @param url
+     * @param model
+     * @param req
+     * @return
+     */
     @RequestMapping(value = "/onlinePreview")
     public String onlinePreview(String url, Model model, HttpServletRequest req) {
+        // 解析文件属性
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
-        model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
-        model.addAttribute("officePreviewType", req.getParameter("officePreviewType"));
+        model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable()); // true : 禁止下载转换生成的pdf文件
+        model.addAttribute("officePreviewType", req.getParameter("officePreviewType")); // 转换后的文件展示的类型  默认为图片(image),可配置为pdf
+        // 获取文件格式转换Service
         FilePreview filePreview = previewFactory.get(fileAttribute);
         logger.info("预览文件url：{}，previewType：{}", url, fileAttribute.getType());
+        // 核心方法: 文件类型转换,预览
         return filePreview.filePreviewHandle(url, model, fileAttribute);
     }
 
+    /**
+     * 文件预览 仅针对图片
+     * @param model
+     * @param req
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(value = "picturesPreview")
     public String picturesPreview(Model model, HttpServletRequest req) throws UnsupportedEncodingException {
         String urls = req.getParameter("urls");

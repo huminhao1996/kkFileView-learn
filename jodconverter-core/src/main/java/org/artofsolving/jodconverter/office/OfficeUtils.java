@@ -66,6 +66,11 @@ public class OfficeUtils {
         return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
     }
 
+    /**
+     * 获取文字处理软件OpenOffice或LiberOffice的路径
+     * OpenOffice,LiberOffice(Windows下已内置，CentOS或Ubuntu下会自动下载安装，MacOS下需要自行安装)
+     * @return
+     */
     public static File getDefaultOfficeHome() {
         Properties properties = new Properties();
         String customizedConfigPath = getCustomizedConfigPath();
@@ -127,6 +132,10 @@ public class OfficeUtils {
         }
     }
 
+    /**
+     * 获取当前项目路径
+     * @return
+     */
     public static String getHomePath() {
         String userDir = System.getenv("KKFILEVIEW_BIN_FOLDER");
         if (userDir == null) {
@@ -145,6 +154,10 @@ public class OfficeUtils {
         return userDir;
     }
 
+    /**
+     * 获取配置文件路径
+     * @return
+     */
     public static String getCustomizedConfigPath() {
         String homePath = OfficeUtils.getHomePath();
         String separator = java.io.File.separator;
@@ -162,6 +175,7 @@ public class OfficeUtils {
             Map.Entry<Object, Object> entry = iterator.next();
             String key = entry.getKey().toString();
             String value = entry.getValue().toString();
+            // 去掉 ${}, ${KK_CACHE_CLEAN_CRON:0 0 3 * * ?} -> 0 0 3 * * ?
             if (value.trim().startsWith("${") && value.trim().endsWith("}")) {
                 int beginIndex = value.indexOf(":");
                 if (beginIndex < 0) {

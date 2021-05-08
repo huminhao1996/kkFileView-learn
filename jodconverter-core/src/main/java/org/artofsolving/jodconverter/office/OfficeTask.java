@@ -12,6 +12,9 @@
 //
 package org.artofsolving.jodconverter.office;
 
+/**
+ * office转换任务
+ */
 public interface OfficeTask {
 
     void execute(OfficeContext context) throws OfficeException;

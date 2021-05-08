@@ -25,6 +25,9 @@ import org.artofsolving.jodconverter.office.OfficeManager;
 
 import com.sun.star.document.UpdateDocMode;
 
+/**
+ * Office转换器
+ */
 public class OfficeDocumentConverter {
 
     private final OfficeManager officeManager;

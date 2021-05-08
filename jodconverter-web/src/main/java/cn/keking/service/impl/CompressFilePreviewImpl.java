@@ -39,6 +39,7 @@ public class CompressFilePreviewImpl implements FilePreview {
         String fileTree = null;
         // 判断文件名是否存在(redis缓存读取)
         if (!StringUtils.hasText(fileUtils.getConvertedFile(fileName))  || !ConfigConstants.isCacheEnabled()) {
+            // 1. 下载远程端文件到 KKFile服务器
             ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, fileName);
             if (0 != response.getCode()) {
                 model.addAttribute("fileType", suffix);
@@ -46,6 +47,8 @@ public class CompressFilePreviewImpl implements FilePreview {
                 return "fileNotSupported";
             }
             String filePath = response.getContent();
+
+            // 2. 读取并解压文件
             if ("zip".equalsIgnoreCase(suffix) || "jar".equalsIgnoreCase(suffix) || "gzip".equalsIgnoreCase(suffix)) {
                 fileTree = zipReader.readZipFile(filePath, fileName);
             } else if ("rar".equalsIgnoreCase(suffix)) {
@@ -53,6 +56,8 @@ public class CompressFilePreviewImpl implements FilePreview {
             } else if ("7z".equalsIgnoreCase(suffix)) {
                 fileTree = zipReader.read7zFile(filePath, fileName);
             }
+
+            // 3. 加入缓存
             if (fileTree != null && !"null".equals(fileTree) && ConfigConstants.isCacheEnabled()) {
                 fileUtils.addConvertedFile(fileName, fileTree);
             }

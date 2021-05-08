@@ -9,10 +9,11 @@ import cn.keking.web.filter.BaseUrlFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 /**
+ *
  * @author : kl
  * @authorboke : kailing.pub
  * @create : 2018-03-25 上午11:58
- * @description:
+ * @description: 处理媒体文件
  **/
 @Service
 public class MediaFilePreviewImpl implements FilePreview {
@@ -27,6 +28,13 @@ public class MediaFilePreviewImpl implements FilePreview {
         this.fileUtils = fileUtils;
     }
 
+    /**
+     * 媒体文件直接下载,浏览器插件展示即可
+     * @param url
+     * @param model
+     * @param fileAttribute
+     * @return
+     */
     @Override
     public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute) {
         // 不是http开头，浏览器不能直接访问，需下载到本地

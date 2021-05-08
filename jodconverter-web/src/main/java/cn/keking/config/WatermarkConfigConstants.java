@@ -3,6 +3,7 @@ package cn.keking.config;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
+ * 水印配置文件参数
  * @author chenjh
  * @since 2020/5/13 17:44
  */
