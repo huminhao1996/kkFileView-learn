@@ -1200,7 +1200,7 @@ if (typeof globalThis === "undefined" || !globalThis._pdfjsCompatibilityChecked)
     var OriginalDOMTokenListAdd = DOMTokenList.prototype.add;
     var OriginalDOMTokenListRemove = DOMTokenList.prototype.remove;
 
-    kDOMTokenList.prototype.add = function () {
+    DOMTokenList.prototype.add = function () {
       for (var _len = arguments.length, tokens = new Array(_len), _key = 0; _key < _len; _key++) {
         tokens[_key] = arguments[_key];
       }
