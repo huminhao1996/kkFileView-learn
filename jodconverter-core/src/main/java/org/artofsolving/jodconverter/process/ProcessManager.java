@@ -14,6 +14,10 @@ package org.artofsolving.jodconverter.process;
 
 import java.io.IOException;
 
+/**
+ * 进程管理器 接口
+ * 执行操作系统命令
+ */
 public interface ProcessManager {
 
     public static final long PID_NOT_FOUND = -2;

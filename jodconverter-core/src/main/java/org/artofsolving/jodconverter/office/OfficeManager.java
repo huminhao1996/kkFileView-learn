@@ -13,7 +13,7 @@
 package org.artofsolving.jodconverter.office;
 
 /**
- * office任务管理器,
+ * office管理器,
  * An OfficeManager knows how to execute {@link OfficeTask}s.
  * <p>
  * An OfficeManager implementation will typically manage one or more
@@ -21,10 +21,23 @@ package org.artofsolving.jodconverter.office;
  */
 public interface OfficeManager {
 
+    /**
+     * 执行
+     * @param task
+     * @throws OfficeException
+     */
     void execute(OfficeTask task) throws OfficeException;
 
+    /**
+     * 开启
+     * @throws OfficeException
+     */
     void start() throws OfficeException;
 
+    /**
+     * 停止
+     * @throws OfficeException
+     */
     void stop() throws OfficeException;
 
     boolean isRunning();

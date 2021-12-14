@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 
 /**
+ * Linux操作系统 进程管理器
  * {@link ProcessManager} implementation for Linux. Uses the <tt>ps</tt>
  * and <tt>kill</tt> commands.
  * <p>

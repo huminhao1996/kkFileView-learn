@@ -32,6 +32,14 @@ public class TrustHostFilter implements Filter {
         }
     }
 
+    /**
+     * 过滤非信任站点
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String url = getSourceUrl(request);

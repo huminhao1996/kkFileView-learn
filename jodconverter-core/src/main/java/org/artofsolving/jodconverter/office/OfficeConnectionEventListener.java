@@ -14,6 +14,9 @@ package org.artofsolving.jodconverter.office;
 
 import java.util.EventListener;
 
+/**
+ * Office连接 监听器
+ */
 interface OfficeConnectionEventListener extends EventListener {
 
     void connected(OfficeConnectionEvent event);

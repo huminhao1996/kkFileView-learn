@@ -20,9 +20,12 @@ import java.util.logging.Logger;
 
 import org.artofsolving.jodconverter.process.ProcessManager;
 
+/**
+ * 池化的 Office管理器,包含多个Office管理器
+ */
 class ProcessPoolOfficeManager implements OfficeManager {
 
-    private final BlockingQueue<PooledOfficeManager> pool;
+    private final BlockingQueue<PooledOfficeManager> pool; //存放Office管理器的阻塞队列
     private final PooledOfficeManager[] pooledManagers;
     private final long taskQueueTimeout;
 
@@ -30,10 +33,29 @@ class ProcessPoolOfficeManager implements OfficeManager {
 
     private final Logger logger = Logger.getLogger(ProcessPoolOfficeManager.class.getName());
 
-    public ProcessPoolOfficeManager(File officeHome, UnoUrl[] unoUrls, String[] runAsArgs, File templateProfileDir, File workDir,
-            long retryTimeout, long taskQueueTimeout, long taskExecutionTimeout, int maxTasksPerProcess,
-            ProcessManager processManager) {
-		this.taskQueueTimeout = taskQueueTimeout;
+    /**
+     * @param officeHome
+     * @param unoUrls
+     * @param runAsArgs
+     * @param templateProfileDir
+     * @param workDir
+     * @param retryTimeout
+     * @param taskQueueTimeout
+     * @param taskExecutionTimeout
+     * @param maxTasksPerProcess
+     * @param processManager
+     */
+    public ProcessPoolOfficeManager(File officeHome,
+                                    UnoUrl[] unoUrls,
+                                    String[] runAsArgs,
+                                    File templateProfileDir,
+                                    File workDir,
+                                    long retryTimeout,
+                                    long taskQueueTimeout,
+                                    long taskExecutionTimeout,
+                                    int maxTasksPerProcess,
+                                    ProcessManager processManager) {
+        this.taskQueueTimeout = taskQueueTimeout;
         pool = new ArrayBlockingQueue<PooledOfficeManager>(unoUrls.length);
         pooledManagers = new PooledOfficeManager[unoUrls.length];
         for (int i = 0; i < unoUrls.length; i++) {
@@ -51,6 +73,11 @@ class ProcessPoolOfficeManager implements OfficeManager {
         logger.info("ProcessManager implementation is " + processManager.getClass().getSimpleName());
     }
 
+    /**
+     * 开启 OpenOffice
+     *
+     * @throws OfficeException
+     */
     public synchronized void start() throws OfficeException {
         for (int i = 0; i < pooledManagers.length; i++) {
             pooledManagers[i].start();
@@ -65,12 +92,14 @@ class ProcessPoolOfficeManager implements OfficeManager {
         }
         PooledOfficeManager manager = null;
         try {
+            // 从队列中获取OfficeManager
             manager = acquireManager();
             if (manager == null) {
                 throw new OfficeException("no office manager available");
             }
             manager.execute(task);
         } finally {
+            // 用完后放回队列中
             if (manager != null) {
                 releaseManager(manager);
             }
@@ -87,6 +116,10 @@ class ProcessPoolOfficeManager implements OfficeManager {
         logger.info("stopped");
     }
 
+    /**
+     * 从阻塞队列中获取 OfficeManager
+     * @return
+     */
     private PooledOfficeManager acquireManager() {
         try {
             return pool.poll(taskQueueTimeout, TimeUnit.MILLISECONDS);
@@ -95,6 +128,10 @@ class ProcessPoolOfficeManager implements OfficeManager {
         }
     }
 
+    /**
+     * 将OfficeManager放入队列
+     * @param manager
+     */
     private void releaseManager(PooledOfficeManager manager) {
         try {
             pool.put(manager);
@@ -103,8 +140,8 @@ class ProcessPoolOfficeManager implements OfficeManager {
         }
     }
 
-	public boolean isRunning() {
-		return running;
-	}
+    public boolean isRunning() {
+        return running;
+    }
 
 }

@@ -35,7 +35,9 @@ public class FilterConfiguration {
 
         TrustHostFilter filter = new TrustHostFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        //设置过滤器
         registrationBean.setFilter(filter);
+        // 设置过滤url
         registrationBean.setUrlPatterns(filterUri);
         return registrationBean;
     }

@@ -17,6 +17,9 @@ import java.io.File;
 import org.artofsolving.jodconverter.process.ProcessManager;
 import org.artofsolving.jodconverter.process.PureJavaProcessManager;
 
+/**
+ * 操作Office进程类 设置类
+ */
 class ManagedOfficeProcessSettings {
 
     public static final long DEFAULT_RETRY_INTERVAL = 250L;
@@ -26,9 +29,9 @@ class ManagedOfficeProcessSettings {
     private String[] runAsArgs;
     private File templateProfileDir;
     private File workDir = new File(System.getProperty("java.io.tmpdir"));
-    private ProcessManager processManager = new PureJavaProcessManager();
-    private long retryTimeout = DefaultOfficeManagerConfiguration.DEFAULT_RETRY_TIMEOUT;
-    private long retryInterval = DEFAULT_RETRY_INTERVAL;
+    private ProcessManager processManager = new PureJavaProcessManager(); // 通过java管理进程
+    private long retryTimeout = DefaultOfficeManagerConfiguration.DEFAULT_RETRY_TIMEOUT; // 重试超时时间
+    private long retryInterval = DEFAULT_RETRY_INTERVAL; //重试间隔
 
     public ManagedOfficeProcessSettings(UnoUrl unoUrl) {
         this.unoUrl = unoUrl;

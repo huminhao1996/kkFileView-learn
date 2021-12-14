@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+// 文件类型注册表
 public class SimpleDocumentFormatRegistry implements DocumentFormatRegistry {
 
 	private List<DocumentFormat> documentFormats = new ArrayList<DocumentFormat>();

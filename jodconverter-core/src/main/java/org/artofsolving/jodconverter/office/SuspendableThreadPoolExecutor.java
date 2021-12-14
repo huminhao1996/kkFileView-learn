@@ -19,6 +19,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 自定义的可暂停线程池
+ */
 class SuspendableThreadPoolExecutor extends ThreadPoolExecutor {
 
     private boolean available = false;
@@ -29,6 +32,11 @@ class SuspendableThreadPoolExecutor extends ThreadPoolExecutor {
         super(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(), threadFactory);
     }
 
+    /**
+     * 执行前的操作
+     * @param thread
+     * @param task
+     */
     @Override
     protected void beforeExecute(Thread thread, Runnable task) {
         super.beforeExecute(thread, task);

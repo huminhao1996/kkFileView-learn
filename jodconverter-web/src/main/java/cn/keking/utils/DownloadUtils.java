@@ -148,6 +148,7 @@ public class DownloadUtils {
     }
 
     private void copyStream(InputStream is, OutputStream os) throws IOException {
+        // TODO: 2021/5/9 这里是否可以增加byte数组大小,提升IO效率
         byte[] bs = new byte[1024];
         int len;
         while (-1 != (len = is.read(bs))) {

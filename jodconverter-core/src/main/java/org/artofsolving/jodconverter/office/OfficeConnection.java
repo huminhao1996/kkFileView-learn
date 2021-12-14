@@ -31,6 +31,9 @@ import com.sun.star.lang.XEventListener;
 import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.uno.XComponentContext;
 
+/**
+ * office连接类
+ */
 class OfficeConnection implements OfficeContext {
 
     private static AtomicInteger bridgeIndex = new AtomicInteger();

@@ -22,15 +22,19 @@ import java.util.logging.Logger;
 import com.sun.star.frame.XDesktop;
 import com.sun.star.lang.DisposedException;
 
+/**
+ * office进程操作类, 对OfficeProcess的方法进行封装
+ */
 class ManagedOfficeProcess {
 
 	private static final Integer EXIT_CODE_NEW_INSTALLATION = Integer.valueOf(81);
 
 	private final ManagedOfficeProcessSettings settings;
 
-	private final OfficeProcess process;
-	private final OfficeConnection connection;
+	private final OfficeProcess process; //office进程
+	private final OfficeConnection connection; //office连接类
 
+	// 单个线程池
 	private ExecutorService executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("OfficeProcessThread"));
 
 	private final Logger logger = Logger.getLogger(getClass().getName());
@@ -46,6 +50,10 @@ class ManagedOfficeProcess {
 		return connection;
 	}
 
+	/**
+	 * 开启OpenOffice并等待
+	 * @throws OfficeException
+	 */
 	public void startAndWait() throws OfficeException {
 		Future<?> future = executor.submit(new Runnable() {
 			public void run() {
@@ -108,9 +116,14 @@ class ManagedOfficeProcess {
 		});
 	}
 
+	/**
+	 * 开启 office进程并连接
+	 * @throws OfficeException
+	 */
 	private void doStartProcessAndConnect() throws OfficeException {
 		try {
 			process.start();
+			// 重试
 			new Retryable() {
 				protected void attempt() throws TemporaryException, Exception {
 					try {
@@ -160,6 +173,10 @@ class ManagedOfficeProcess {
 		process.deleteProfileDir();
 	}
 
+	/**
+	 * 终止进程
+	 * @throws OfficeException
+	 */
 	private void doTerminateProcess() throws OfficeException {
 		try {
 			int exitCode = process.forciblyTerminate(settings.getRetryInterval(), settings.getRetryTimeout());

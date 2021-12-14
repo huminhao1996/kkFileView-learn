@@ -14,10 +14,17 @@ package org.artofsolving.jodconverter.office;
 
 import java.util.EventObject;
 
+/**
+ * Office连接 事件
+ */
 class OfficeConnectionEvent extends EventObject {
 
     private static final long serialVersionUID = 2060652797570876077L;
 
+    /**
+     * 构造器 传入事件源
+     * @param source
+     */
     public OfficeConnectionEvent(OfficeConnection source) {
         super(source);
     }

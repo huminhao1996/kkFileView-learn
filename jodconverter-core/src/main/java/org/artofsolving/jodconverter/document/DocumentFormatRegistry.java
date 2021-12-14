@@ -14,6 +14,9 @@ package org.artofsolving.jodconverter.document;
 
 import java.util.Set;
 
+/**
+ * 文件类型注册表 接口
+ */
 public interface DocumentFormatRegistry {
 
     public DocumentFormat getFormatByExtension(String extension);

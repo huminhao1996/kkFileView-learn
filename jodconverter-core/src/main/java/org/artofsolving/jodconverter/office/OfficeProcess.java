@@ -27,6 +27,10 @@ import org.artofsolving.jodconverter.process.ProcessManager;
 import org.artofsolving.jodconverter.process.ProcessQuery;
 import org.artofsolving.jodconverter.util.PlatformUtils;
 
+/**
+ * 核心类
+ * Office 进程类
+ */
 class OfficeProcess {
 
     private final File officeHome;
@@ -34,9 +38,9 @@ class OfficeProcess {
     private final String[] runAsArgs;
     private final File templateProfileDir;
     private final File instanceProfileDir;
-    private final ProcessManager processManager;
+    private final ProcessManager processManager; // 进程管理器,执行操作系统命令
 
-    private Process process;
+    private Process process; //进程类
     private long pid = PID_UNKNOWN;
 
     private final Logger logger = Logger.getLogger(getClass().getName());
@@ -54,6 +58,11 @@ class OfficeProcess {
         start(false);
     }
 
+    /**
+     * 通过cmd命令 开启OpenOffice进程
+     * @param restart
+     * @throws IOException
+     */
     public void start(boolean restart) throws IOException {
         ProcessQuery processQuery = new ProcessQuery("soffice.bin", unoUrl.getAcceptString());
         long existingPid = processManager.findPid(processQuery);

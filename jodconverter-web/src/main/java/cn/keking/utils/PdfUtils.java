@@ -85,6 +85,7 @@ public class PdfUtils {
             }
             String imageFilePath;
             // pdf的每一页都转换为 jpg
+            // TODO: 2021/6/3 这里可以用线程池 
             for (int pageIndex = 0; pageIndex < pageCount; pageIndex++) {
                 // 图片文件路径
                 imageFilePath = folder + File.separator + pageIndex + imageFileSuffix;

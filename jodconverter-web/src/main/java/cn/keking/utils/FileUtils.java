@@ -90,6 +90,7 @@ public class FileUtils {
         String[] simText = ConfigConstants.getSimText();
         String[] media = ConfigConstants.getMedia();
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+        // 根据文件名得到对应的文件类型
         if (listPictureTypes().contains(fileType.toLowerCase())) {
             return FileType.picture;
         }

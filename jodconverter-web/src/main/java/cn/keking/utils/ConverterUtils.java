@@ -44,6 +44,7 @@ public class ConverterUtils {
         File officeHome;
         // 获取文字处理软件OpenOffice或LiberOffice的路径
         // 一定要先安装环境,并且在application.properties将软件路径配置正确,否则就会报下面"找不到office组件"错误
+        // TODO: 2021/6/3 可以增加多个openoffice 来提高转换效率
         officeHome = OfficeUtils.getDefaultOfficeHome();
         if (officeHome == null) {
             throw new RuntimeException("找不到office组件，请确认'office.home'配置是否有误");
@@ -62,6 +63,7 @@ public class ConverterUtils {
             configuration.setTaskExecutionTimeout(1000 * 60 * 5L);
             // 设置任务队列超时为24小时
             configuration.setTaskQueueTimeout(1000 * 60 * 60 * 24L);
+            // 构建Office管理器(包含多个)
             officeManager = configuration.buildOfficeManager();
             // 启动office管理器
             officeManager.start();

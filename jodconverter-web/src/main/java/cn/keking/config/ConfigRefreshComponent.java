@@ -53,7 +53,7 @@ public class ConfigRefreshComponent {
                 String trustHost;
                 String pdfDownloadDisable;
                 while (true) {
-                    LOGGER.info("更新配置信息");
+//                    LOGGER.info("更新配置信息");
                     // 读取配置文件
                     FileReader fileReader = new FileReader(configFilePath);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -61,6 +61,7 @@ public class ConfigRefreshComponent {
 
                     // 核心方法: 获取配置文件中的属性并转换
                     OfficeUtils.restorePropertiesFromEnvFormat(properties);
+
                     // 优先从配置文件中读取属性,空的话再设置为默认值
                     cacheEnabled = Boolean.parseBoolean(properties.getProperty("cache.enabled", ConfigConstants.DEFAULT_CACHE_ENABLED));
                     text = properties.getProperty("simText", ConfigConstants.DEFAULT_TXT_TYPE);
@@ -86,10 +87,12 @@ public class ConfigRefreshComponent {
                     ConfigConstants.setBaseUrlValue(baseUrl);
                     ConfigConstants.setTrustHostValue(trustHost);
                     ConfigConstants.setPdfDownloadDisableValue(pdfDownloadDisable);
-                    // 设置水印配置文件
+                    // 重置水印配置文件
                     setWatermarkConfig(properties);
+
                     bufferedReader.close();
                     fileReader.close();
+
                     // 每隔1s读取并更新一次配置文件
                     Thread.sleep(1000L);
                 }

@@ -30,10 +30,10 @@ import com.sun.star.document.UpdateDocMode;
  */
 public class OfficeDocumentConverter {
 
-    private final OfficeManager officeManager;
-    private final DocumentFormatRegistry formatRegistry;
+    private final OfficeManager officeManager;  // office任务管理器
+    private final DocumentFormatRegistry formatRegistry;    //文件类型注册表
 
-    private Map<String,?> defaultLoadProperties = createDefaultLoadProperties();
+    private Map<String,?> defaultLoadProperties = createDefaultLoadProperties();    // 加载配置
 
     public OfficeDocumentConverter(OfficeManager officeManager) {
         this(officeManager, new DefaultDocumentFormatRegistry());
@@ -60,18 +60,29 @@ public class OfficeDocumentConverter {
         return formatRegistry;
     }
 
+    /**
+     * 文件类型转换 (入口)
+     * @param inputFile 输入文件路径
+     * @param outputFile    输出文件路径
+     * @throws OfficeException
+     */
     public void convert(File inputFile, File outputFile) throws OfficeException {
         String outputExtension = FilenameUtils.getExtension(outputFile.getName());
         DocumentFormat outputFormat = formatRegistry.getFormatByExtension(outputExtension);
         convert(inputFile, outputFile, outputFormat);
     }
 
-    public void convert(File inputFile, File outputFile, DocumentFormat outputFormat) throws OfficeException {
+    public void convert(File inputFile,
+                        File outputFile,
+                        DocumentFormat outputFormat) throws OfficeException {
+        // 输入文件前缀
         String inputExtension = FilenameUtils.getExtension(inputFile.getName());
-        DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);
+        DocumentFormat inputFormat = formatRegistry.getFormatByExtension(inputExtension);   // 转换成对应的Office类型
+        // 文件转换Task类 构建
         StandardConversionTask conversionTask = new StandardConversionTask(inputFile, outputFile, outputFormat);
         conversionTask.setDefaultLoadProperties(defaultLoadProperties);
         conversionTask.setInputFormat(inputFormat);
+        // 核心方法: 执行文件转换Task
         officeManager.execute(conversionTask);
     }
 

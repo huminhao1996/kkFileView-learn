@@ -19,11 +19,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
+/**
+ * 单个 Office管理器
+ */
 class PooledOfficeManager implements OfficeManager {
 
-    private final PooledOfficeManagerSettings settings;
-    private final ManagedOfficeProcess managedOfficeProcess;
-    private final SuspendableThreadPoolExecutor taskExecutor;
+    private final PooledOfficeManagerSettings settings; //设置
+    private final ManagedOfficeProcess managedOfficeProcess; //office进程操作类, 对OfficeProcess的方法进行封装
+    private final SuspendableThreadPoolExecutor taskExecutor; // 可暂停的线程池
 
     private volatile boolean stopping = false;
     private int taskCount;
@@ -31,6 +34,9 @@ class PooledOfficeManager implements OfficeManager {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
+    /**
+     * Office连接监听
+     */
     private OfficeConnectionEventListener connectionEventListener = new OfficeConnectionEventListener() {
         public void connected(OfficeConnectionEvent event) {
             taskCount = 0;
@@ -62,6 +68,11 @@ class PooledOfficeManager implements OfficeManager {
         taskExecutor = new SuspendableThreadPoolExecutor(new NamedThreadFactory("OfficeTaskThread"));
     }
 
+    /**
+     * 核心方法: 执行任务
+     * @param task
+     * @throws OfficeException
+     */
     public void execute(final OfficeTask task) throws OfficeException {
         Future<?> futureTask = taskExecutor.submit(new Runnable() {
             public void run() {
@@ -72,13 +83,14 @@ class PooledOfficeManager implements OfficeManager {
                     managedOfficeProcess.restartAndWait();
                     //FIXME taskCount will be 0 rather than 1 at this point
                 }
-                task.execute(managedOfficeProcess.getConnection());
-             }
+                task.execute(managedOfficeProcess.getConnection()); // 执行任务 传入office连接
+            }
          });
          currentTask = futureTask;
          try {
              futureTask.get(settings.getTaskExecutionTimeout(), TimeUnit.MILLISECONDS);
          } catch (TimeoutException timeoutException) {
+             // 任务超时异常
              managedOfficeProcess.restartDueToTaskTimeout();
              throw new OfficeException("task did not complete within timeout", timeoutException);
          } catch (ExecutionException executionException) {

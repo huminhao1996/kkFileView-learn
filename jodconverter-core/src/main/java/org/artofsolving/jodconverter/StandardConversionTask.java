@@ -25,6 +25,9 @@ import org.artofsolving.jodconverter.office.OfficeException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.util.XRefreshable;
 
+/**
+ * 文件类型转换Task
+ */
 public class StandardConversionTask extends AbstractConversionTask {
 
     private final DocumentFormat outputFormat;
@@ -45,8 +48,14 @@ public class StandardConversionTask extends AbstractConversionTask {
         this.inputFormat = inputFormat;
     }
 
+    /**
+     * 核心方法: 转换
+     * @param document
+     * @throws OfficeException
+     */
     @Override
     protected void modifyDocument(XComponent document) throws OfficeException {
+        // 调用openoffice最原生的api去进行转换
         XRefreshable refreshable = cast(XRefreshable.class, document);
         if (refreshable != null) {
             refreshable.refresh();

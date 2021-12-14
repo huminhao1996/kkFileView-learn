@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 构建带有名字的线程 工厂类
  * A {@link ThreadFactory} that allows for custom thread names
  */
 class NamedThreadFactory implements ThreadFactory {

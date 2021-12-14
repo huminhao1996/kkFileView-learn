@@ -20,9 +20,12 @@ import org.artofsolving.jodconverter.process.LinuxProcessManager;
 import org.artofsolving.jodconverter.process.SigarProcessManager;
 import org.artofsolving.jodconverter.util.PlatformUtils;
 
+/**
+ * office管理器配置
+ */
 public class DefaultOfficeManagerConfiguration {
 
-    public static final long DEFAULT_RETRY_TIMEOUT = 120000L;
+    public static final long DEFAULT_RETRY_TIMEOUT = 120000L; //重试超时的时间
 
     private File officeHome = OfficeUtils.getDefaultOfficeHome();
     private OfficeConnectionProtocol connectionProtocol = OfficeConnectionProtocol.SOCKET;
@@ -152,6 +155,11 @@ public class DefaultOfficeManagerConfiguration {
         return this;
     }
 
+    /**
+     * 构建Office管理器(包含多个)
+     * @return
+     * @throws IllegalStateException
+     */
     public OfficeManager buildOfficeManager() throws IllegalStateException {
         if (officeHome == null) {
             throw new IllegalStateException("officeHome not set and could not be auto-detected");
@@ -167,6 +175,9 @@ public class DefaultOfficeManagerConfiguration {
             throw new IllegalStateException("workDir doesn't exist or is not a directory: " + workDir);
         }
 
+        /**
+         * 获取 操作进程的管理器
+         */
         if (processManager == null) {
             processManager = findBestProcessManager();
         }
@@ -176,6 +187,8 @@ public class DefaultOfficeManagerConfiguration {
         for (int i = 0; i < numInstances; i++) {
             unoUrls[i] = (connectionProtocol == OfficeConnectionProtocol.PIPE) ? UnoUrl.pipe(pipeNames[i]) : UnoUrl.socket(portNumbers[i]);
         }
+
+        // 创建 池化的Office管理器,里面包含多个Office管理器
         return new ProcessPoolOfficeManager(officeHome, unoUrls, runAsArgs, templateProfileDir, workDir, retryTimeout, taskQueueTimeout, taskExecutionTimeout, maxTasksPerProcess, processManager);
     }
 
@@ -183,6 +196,7 @@ public class DefaultOfficeManagerConfiguration {
         if (isSigarAvailable()) {
             return new SigarProcessManager();
         } else if (PlatformUtils.isLinux()) {
+            // Linux操作系统 进程管理器
         	LinuxProcessManager processManager = new LinuxProcessManager();
         	if (runAsArgs != null) {
         		processManager.setRunAsArgs(runAsArgs);
@@ -190,7 +204,8 @@ public class DefaultOfficeManagerConfiguration {
         	return processManager;
         } else {
             // NOTE: UnixProcessManager can't be trusted to work on Solaris
-            // because of the 80-char limit on ps output there  
+            // because of the 80-char limit on ps output there
+            // Java 进程管理器
             return new PureJavaProcessManager();
         }
     }

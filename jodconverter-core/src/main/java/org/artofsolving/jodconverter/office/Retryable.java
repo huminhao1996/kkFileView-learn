@@ -12,6 +12,9 @@
 //
 package org.artofsolving.jodconverter.office;
 
+/**
+ * 重试
+ */
 abstract class Retryable {
 
     /**

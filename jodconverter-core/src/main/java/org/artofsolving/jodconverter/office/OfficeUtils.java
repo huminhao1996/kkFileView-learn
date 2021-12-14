@@ -170,6 +170,7 @@ public class OfficeUtils {
      * @param properties
      */
     public synchronized static void restorePropertiesFromEnvFormat(Properties properties) {
+        // 迭代器
         Iterator<Map.Entry<Object, Object>> iterator = properties.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Object, Object> entry = iterator.next();

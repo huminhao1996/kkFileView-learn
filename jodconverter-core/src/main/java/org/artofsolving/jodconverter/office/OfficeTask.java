@@ -13,7 +13,7 @@
 package org.artofsolving.jodconverter.office;
 
 /**
- * office转换任务
+ * office转换Task
  */
 public interface OfficeTask {
 

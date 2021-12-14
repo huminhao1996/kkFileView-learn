@@ -8,7 +8,7 @@ import java.util.Map;
 
 /**
  * Created by kl on 2018/1/17.
- * Content :
+ * Content : 文件类型转换工厂
  */
 @Service
 public class FilePreviewFactory {

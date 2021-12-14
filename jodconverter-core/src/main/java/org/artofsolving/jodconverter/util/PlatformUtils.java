@@ -12,6 +12,9 @@
 //
 package org.artofsolving.jodconverter.util;
 
+/**
+ * 操作系统 工具类
+ */
 public class PlatformUtils {
 
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase();

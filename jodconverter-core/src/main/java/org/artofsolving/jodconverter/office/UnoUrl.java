@@ -25,6 +25,10 @@ package org.artofsolving.jodconverter.office;
  * <p>
  * See <a href="http://wiki.services.openoffice.org/wiki/Documentation/DevGuide/ProUNO/Opening_a_Connection">Opening a Connection</a>
  * in the OpenOffice.org Developer's Guide for more details.
+ *
+ * 封装UNO进程间连接类型和参数。
+ * OpenOffice.org支持两种连接类型：TCP套接字和命名管道。
+ * 管道稍微快一些，并且不占用TCP端口，但是它们需要本地库，这意味着需要设置
  */
 class UnoUrl {
 
