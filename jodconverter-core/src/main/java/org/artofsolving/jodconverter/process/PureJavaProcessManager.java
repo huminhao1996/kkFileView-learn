@@ -12,6 +12,9 @@
 //
 package org.artofsolving.jodconverter.process;
 
+/**
+ * Java 进程管理器
+ */
 public class PureJavaProcessManager implements ProcessManager {
 
     public long findPid(ProcessQuery query) {
